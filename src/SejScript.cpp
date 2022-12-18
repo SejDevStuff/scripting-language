@@ -576,10 +576,10 @@ void parse_ln(int &f_line, string line, bool inline_parse = false) {
     } else if (command == "get_var_pos") {
         cmd_get_var_pos(f_line, args);
     } else if (command == "::") {
-        if (inline_parse) {
-            cout << "[SejScript Warning] CodePoints may not work with inline parsing" << endl;
-        }
-        add_codepoint(f_line, args);
+       // if (inline_parse) {
+       //     cout << "[SejScript Warning] CodePoints may not work with inline parsing" << endl;
+       // }
+       // add_codepoint(f_line, args);
     } else if (command == "goto") {
         cmd_goto(f_line, args);
     } else if (command == "clear_scr") {
@@ -624,7 +624,7 @@ void parse_file(string f_name) {
 
     int f_line = 0;
     variables.clear();
-    codepoints.clear();
+   //codepoints.clear();
 
     ifstream file(f_name);
 
@@ -640,6 +640,34 @@ void parse_file(string f_name) {
     }
 }
 
+void add_all_codepoints(string f_name) {
+    int f_line = 0;
+
+    ifstream file(f_name);
+    
+    codepoints.clear();
+
+    if (file.is_open()) {
+        string line;
+        while (read_nth_line(f_name, f_line, line)) {
+            f_line++;
+            vector parts = split_str(line);
+            if (parts.size() != 0) {
+                if (parts[0] == "::") {
+                    if (parts.size() != 2) {
+                        return error(f_line, "Invalid CodePoint declaration");
+                    }
+                    string codepoint = trim(parts[1]);
+                    add_codepoint(f_line, codepoint);
+                }
+            }
+        }
+        file.close();
+    } else {
+        return error(-1, "Cannot open file for reading");
+    }
+}
+
 int main(int argc, char** argv) {
     if (argc != 2) {
         error(-1, "Invalid number of arguments");
@@ -647,5 +675,6 @@ int main(int argc, char** argv) {
     }
 
     string f_name = argv[1];
+    add_all_codepoints(f_name);
     parse_file(f_name);
 }

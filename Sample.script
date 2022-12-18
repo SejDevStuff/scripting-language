@@ -1,7 +1,67 @@
-make_var i
-set_var i 1
+; Sample Testing Script
+; Anything beginning with ";" is a comment and will be ignored
 
-:: LoopMain
-print i
-let i (i+1)
-if_true i <= 10, goto LoopMain
+; ========================================================= ;
+;                       Hello World!                        ;
+; ========================================================= ;
+make_var str
+set_var str "Hello, world!"
+print str
+
+print ""
+
+
+; ========================================================= ;
+;                   Example of a loop                       ;
+; ========================================================= ;
+
+make_var i
+set_var i 0
+:: Loop
+    let i (i+1)
+    print_no_linebreak "Loop iteration: "
+    print i
+    if_true i<10, goto Loop
+
+print ""
+
+; ========================================================= ;
+;                   Example of input                        ;
+; ========================================================= ;
+
+make_var name
+print_no_linebreak "What is your name? "
+get_input name
+
+print_no_linebreak "Hello, "
+print_no_linebreak name
+print "!"
+
+print ""
+
+; ========================================================= ;
+;                   Fibonacci Sequence                      ;
+; ========================================================= ;
+make_var limit
+print_no_linebreak "How many Fibonacci numbers do you want to print? "
+get_input limit
+
+make_var numberOne
+make_var numberTwo
+make_var numbersAdded
+make_var numbersPrinted
+
+set_var numbersPrinted 0
+set_var numberOne 1
+set_var numberTwo 0
+
+:: Fibonacci
+    let numbersPrinted (numbersPrinted+1)
+    let numbersAdded (numberOne+numberTwo)
+    set_var numberOne numberTwo
+    set_var numberTwo numbersAdded
+    print_no_linebreak numbersAdded
+    print_no_linebreak " "
+    if_true numbersPrinted<limit, goto Fibonacci
+
+print ""
