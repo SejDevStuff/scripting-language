@@ -1,0 +1,27 @@
+SejScript
+
+toggle_continue_on_err                              // Done
+
+make_var [VARNAME]                                  // Done
+set_var [VARNAME] [VALUE]                           // Done
+get_var_pos [DEST_VARNAME] [SRC_VARNAME] [INDEX]    // Done
+
+:: CodePoint                                        // Done
+goto [CODEPOINT_NAME]                               // Done
+
+if_true COND, CMD                                   // Done?
+if_false COND, CMD                                  // Done?
+
+print [TXT]                                         // Done
+print_no_linebreak [TXT]                            // Done
+clear_scr                                           // Done
+get_input [VARNAME]                                 // Done
+
+read_file [FILENAME] [VARNAME]
+write_file [FILENAME] [DATA]
+
+wait [SEC]                                          // Done
+exit                                                // Done
+run [PROG_FILE_NAME]
+eval [CMD]                                          // Done
+let [DEST_VAR] [EXPR]                               // Done

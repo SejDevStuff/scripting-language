@@ -1,0 +1,7 @@
+make_var i
+set_var i 1
+
+:: LoopMain
+print i
+let i (i+1)
+if_true i <= 10, goto LoopMain
