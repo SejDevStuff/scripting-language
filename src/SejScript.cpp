@@ -127,6 +127,42 @@ string get_var(int f_ln, string var) {
     return variables.find(var)->second;
 }
 
+bool dblquotes_matched(string str) {
+    bool found_start_dblquote = false;
+    bool found_data = false;
+    bool found_end_dblquote = false;
+
+    for (int i = 0; i < str.size(); i++) {
+        if (str[i] == '"') {
+            if (!found_start_dblquote) {
+                if (found_end_dblquote) {
+                    error(-1, "Found end dblquote before start dblquote");
+                    return false;
+                }
+                if (found_data) {
+                    error(-1, "Found data before start dblquote");
+                    return false;
+                }
+                found_start_dblquote = true;
+            } else {
+                if (found_end_dblquote) {
+                    error(-1, "Unexpected dblquote");
+                    return false;
+                }
+                found_end_dblquote = true;
+            }
+        } else {
+            if (!found_start_dblquote || found_end_dblquote) {
+                error(-1, "Unexpected data");
+                return false;
+            }
+            found_data = true;
+        }
+    }
+
+    return (found_start_dblquote && found_end_dblquote);
+}
+
 string tokenise(int ln, string _args) {
     bool dblQuote = false;
     bool fullyAlNum = true;
@@ -146,21 +182,19 @@ string tokenise(int ln, string _args) {
     }
 
     string tokenisedString;
-    int dblQuotes = 0;
 
     for (int i = 0; i < _args.size(); i++) {
         if (_args[i] == '"') {
             dblQuote = true;
-            dblQuotes++;
         } else {
             tokenisedString += _args[i];
         }
     }
 
-    // if ((dblQuotes % 2) != 0) {
-    //     error(ln, "Mismatched double quote (\")");
-    //     return "";
-    // }
+    if (dblQuote && !dblquotes_matched(_args)) {
+        error(ln, "Mismatched double quote (\")");
+        return "";
+    }
 
     if (!dblQuote && fullyAlNum) {
         if (!fullyNum) {
@@ -200,8 +234,9 @@ void cmd_set_var(int &f_ln, string args) {
     if (trim(tokenise(f_ln, value)) == "") {
         return;
     }
+    value = trim(tokenise(f_ln, value));
     auto itr = variables.find(vars[0]);
-    itr->second = vars[1];
+    itr->second = value;
 }
 
 // print [TXT] or print_no_linebreak [TXT]
